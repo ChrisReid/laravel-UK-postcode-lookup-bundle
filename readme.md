@@ -93,7 +93,7 @@ Example JQuery:
 
 	.on('#postcode_lookup_button', 'click', function () {
         var postcode = $('#postcode').val().replace(' ', '');
-        var house_number = $('#house_number').val();
+        var house_number = $('#house_number').val().replace(' ', '_');
         if (postcode.length < 6) {
             alert('too short');
             return;
@@ -108,7 +108,7 @@ Example JQuery:
             }
     	});
     });
-    
+
 
 The Future
 ==========
