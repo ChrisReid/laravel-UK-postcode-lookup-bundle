@@ -6,7 +6,15 @@ A simple UK Postcode lookup Bundle using Google API
 
 Installation
 ============
-Copy the whole folder inside your Bundles folder. Add the following to bundles.php :
+You can install this bundle by running the following CLI command:
+
+	php artisan bundle:install postcode
+
+Alternatively you can download it directly from GitHub:
+
+	http://github.com/chrisreiduk/laravel-UK-postcode-lookup-bundle
+
+Add the following to bundles.php :
 
 	'postcode' => array('auto'  => true, 'handles' => 'postcode'),
 
@@ -115,11 +123,9 @@ The Future
 Perhaps a useful UK Postcode validation method using regex to add to the wonderful Laravel Validation model. Any contributions appreciated.
 
 
+Contact
+=======
+You can email me with any questions or feedback at
 
-
-
-
-
-
-
+	chrisreiduk@gmail.com
 
