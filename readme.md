@@ -125,7 +125,5 @@ Perhaps a useful UK Postcode validation method using regex to add to the wonderf
 
 Contact
 =======
-You can email me with any questions or feedback at
-
-	chrisreiduk@gmail.com
+You can email me with any questions or feedback at chrisreiduk@gmail.com
 
