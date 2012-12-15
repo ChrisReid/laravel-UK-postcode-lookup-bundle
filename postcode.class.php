@@ -13,6 +13,7 @@ class Postcode
 	public $data = array();
 	public $error;
 
+	public $region = 'uk'; //default value to be safe
 	private $stored_postcode;
 	private $lat;
 	private $lng;
@@ -38,6 +39,11 @@ class Postcode
         'Lane',
         'Avenue'
     );
+    
+    public function set_region($region) 
+    {    	
+    	$this->region = $region;	
+    }
 
     public function set_postcode($postcode)
 	{
@@ -45,7 +51,7 @@ class Postcode
 
 	    $postcode = str_replace(' ', '', $postcode);
 
-	    $query = json_decode(file_get_contents(static::$endpoint . '?address=' . $postcode . '&sensor=false&region=uk'));
+	    $query = json_decode(file_get_contents(static::$endpoint . '?address=' . $postcode . '&sensor=false&region=' . $this->region));
 
 	    if ($query->status !== 'OK')
 	    {
@@ -83,7 +89,7 @@ class Postcode
 
 	public function get_address($house_number = null)
 	{
-	    $query = json_decode(file_get_contents(static::$endpoint . '?latlng=' . $this->lat . ',' . $this->lng . '&sensor=false&region=uk'));
+	    $query = json_decode(file_get_contents(static::$endpoint . '?latlng=' . $this->lat . ',' . $this->lng . '&sensor=false&region=' . $this->region));
 
 	    if ($query->status !== 'OK')
 	    {
