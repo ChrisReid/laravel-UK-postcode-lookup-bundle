@@ -13,10 +13,12 @@ class Postcode
 	public $data = array();
 	public $error;
 
-	public $region = 'uk'; //default value to be safe
+	private static $default_region = 'uk'; //default value to be safe
+	private $region = null;
+
 	private $stored_postcode;
-	private $lat;
-	private $lng;
+	private $lat = null;
+	private $lng = null;
 
     private static $short_addr = array(
         '/Dr$/',
@@ -39,19 +41,62 @@ class Postcode
         'Lane',
         'Avenue'
     );
-    
-    public function set_region($region) 
-    {    	
-    	$this->region = $region;	
+
+    public static function default_region($default_region)
+    {
+    	static::$default_region = $default_region;
     }
 
-    public function set_postcode($postcode)
+    public function set_postcode($postcode, $region = null)
 	{
-		$this->postcode = $postcode; //static::format($postcode, false);
+		$this->postcode = $postcode;
+		if ($region !== null)
+		{
+			$this->region = $region;
+		}
+		$this->lat = $this->lng = null;
+	}
 
-	    $postcode = str_replace(' ', '', $postcode);
+	public function __construct($postcode = null, $region = null)
+    {
+    	if ($postcode !== null)
+    	{
+    		$this->set_postcode($postcode, $region);
+    	}
+    }
 
-	    $query = json_decode(file_get_contents(static::$endpoint . '?address=' . $postcode . '&sensor=false&region=' . $this->region));
+ 	public static function is($postcode, $region = null)
+	{
+		return new static($postcode, $region);
+	}
+
+	/**
+	 * Set the lat and lng values statically ( eg. Postcode::lat_lng_is({lat}, {lng}) )
+	 * @param  [type] $lat [latitude]
+	 * @param  [type] $lng [longitude]
+	 * @return [Object]    [Postcode Object for method chaining]
+	 */
+	public static function lat_lng_is($lat, $lng)
+	{
+		$obj = new static;
+		$obj->lat = $lat;
+		$obj->lng = $lng;
+
+		return $obj;
+	}
+
+	/**
+	 * Populates the class lat and lng variables based on $stored_postcode
+	 * @return [array] [latitude and longitude]
+	 */
+	public function get_lat_lng()
+	{
+		if ($this->region === null)
+		{
+			$this->region = static::$default_region;
+		}
+
+		$query = json_decode(file_get_contents(static::$endpoint . '?address=' . $this->stored_postcode . '&sensor=false&region=' . $this->region));
 
 	    if ($query->status !== 'OK')
 	    {
@@ -65,30 +110,23 @@ class Postcode
 	    return array('result' => $this->data);
 	}
 
-	public function __construct($postcode = null)
-    {
-    	if ($postcode !== null)
-    	{
-    		$this->set_postcode($postcode);
-    	}
-    }
-
- 	public static function is($postcode)
-	{
-		return new static($postcode);
-	}
-
-	public static function lat_lng_is($lat, $lng)
-	{
-		$obj = new static;
-		$obj->lat = $lat;
-		$obj->lng = $lng;
-
-		return $obj;
-	}
-
+	/**
+	 * Uses the class lat and lng values to get an address. If lat and lng are not set, call get_lat_lng first
+	 * @param  [type] $house_number [House name or number]
+	 * @return [array] [Address values. These values can also be accessed as object properties.]
+	 */
 	public function get_address($house_number = null)
 	{
+		if ($this->region === null)
+		{
+			$this->region = static::$default_region;
+		}
+
+		if ($this->lat === null || $this->lng === null)
+		{
+			$this->get_lat_lng();
+		}
+
 	    $query = json_decode(file_get_contents(static::$endpoint . '?latlng=' . $this->lat . ',' . $this->lng . '&sensor=false&region=' . $this->region));
 
 	    if ($query->status !== 'OK')
