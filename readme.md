@@ -27,10 +27,6 @@ Add the following to bundles.php :
     
     or
     
-    $address = Postcode::is('{postcode}, {region for this call only - optional}')->get_address('{house_name_or_number - optional}');
-    
-    or
-    
     $address = Postcode::lat_lng_is('{latitude}', {'longitude'})->get_address('{house_name_or_number(optional)}');
     
 
