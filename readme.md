@@ -121,9 +121,33 @@ Example JQuery:
     });
     
 
-# The Future
+# Updates
 
-Perhaps a useful UK Postcode validation method using regex to add to the wonderful Laravel Validation model. Any contributions appreciated.
+##UK Postcode Validation
+
+There is now a useful validation feature to check for a valid UK postcode format using regex.
+
+    Postcode::is_valid_uk('m320rl') // returns true;
+    Postcode::is_valid_uk('m32qrl') // returns false;
+
+It also extends Laravel's validator so you can just add the rule 'uk_postcode' to the postcode field.
+
+##Reverse Lookup
+
+You can now look up postcodes by address:
+
+    Postcode::address_is('12 mountbatten road, norfolk')->get_address();
+
+or with $auto_address = true, it will also work as follows:
+
+    Postcode::is('12 mountbatten road, norfolk')->get_address();
+
+if $auto_address = false, the latter query would result in an error as it's not a postcode.
+
+##The future
+
+Does anyone want to add a regex to validate postcodes in their region?
+
 
 # Contact
 
